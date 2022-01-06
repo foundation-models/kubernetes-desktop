@@ -1,0 +1,17 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: test-local-volume
+spec:
+  containers:
+    - name: test-local-volume
+      image: busybox
+      volumeMounts:
+      - mountPath: "/opt/src"
+        name: workspace
+      command: ["sh", "-c", "tail -f /dev/null"]
+  volumes:
+    - hostPath:
+        path: /Users/hossein.akhlaghpour/workspace
+        type: Directory
+      name: workspace
