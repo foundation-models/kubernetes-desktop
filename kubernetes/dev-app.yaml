@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dev-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dev-app
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: dev-app
+    spec:
+      containers:
+        - image: hossein20s/jupyter-python3:v1.0                    
+          name: dev-app
+          workingDir: /home/developer/workspace
+          imagePullPolicy: IfNotPresent
+          resources: {}
+          ports:
+            - containerPort: 8888
+          volumeMounts:
+          - mountPath: "/home/developer/workspace"
+            name: workspace
+          command: ["sh", "-c", "tail -f /dev/null"]
+          # command: ["sh", "-c", "jupyter notebook --port=8888 --no-browser --ip=0.0.0.0 --allow-root"]
+      restartPolicy: Always
+      volumes:
+      - hostPath:
+          path: /Users/hossein.akhlaghpour/workspace
+          type: Directory
+        name: workspace
+status: {}
+

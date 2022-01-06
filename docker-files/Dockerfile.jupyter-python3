@@ -1,0 +1,44 @@
+FROM ubuntu AS builder-image
+
+# Run the follwing command
+# docker build -f Dockerfile.jupyter-python3 -t hossein20s/jupyter-python3:v1.0 .
+
+# avoid stuck build due to user prompt
+ARG TIMEZONE="America/Los_Angeles" 
+ENV DEBIAN_FRONTEND=noninteractive
+ENV DISPLAY :0
+EXPOSE 22 
+
+RUN apt-get update && apt install -y software-properties-common && apt-get update && add-apt-repository -y ppa:deadsnakes/ppa && \
+	apt-get update && apt-get install --no-install-recommends -y sudo ssh openssh-server  \
+    wget bzip2 apt-transport-https ca-certificates dnsutils curl vim nano git \
+    netcat net-tools iputils-ping \
+	&& apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install --no-install-recommends -y python3.9 python3.9-dev python3.9-venv python3-pip python3-wheel build-essential && \
+	apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install --no-cache-dir wheel gunicorn
+
+ARG UID=1001
+ARG GID=1001
+ARG USER=developer
+# default password for user
+ARG PW=developer
+
+RUN useradd -m ${USER} --uid=${UID} && echo "${USER}:${PW}" | chpasswd && \
+	echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
+	adduser ${USER} users && adduser ${USER} sudo && \
+	usermod --shell /bin/zsh ${USER} 
+
+RUN chown -R $USER /home/$USER
+
+USER $USER
+
+ENV PYTHONUNBUFFERED=1
+ENV VIRTUAL_ENV=/home/$USER/venv
+ENV PATH="/home/$USER/venv/bin:/home/$USER/.local/bin:$PATH"
+
+RUN pip install jupyter ipywidgets ipykernel
+
+CMD ["jupyter", "notebook", "--port=9999", "--no-browser", "--ip=0.0.0.0", "--allow-root"]

@@ -1,0 +1,22 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: jupyter-python3
+spec:
+  containers:
+  - name: jupyter-python3
+    image: hossein20s/jupyter-python3:v1.0
+    ports:
+    - containerPort: 8888
+    workingDir: /home/developer/workspace
+    resources: {}
+    volumeMounts:
+    - mountPath: "/home/developer/workspace"
+      name: workspace
+    command: ["sh", "-c", "tail -f /dev/null"]
+    # command: ["sh", "-c", "jupyter notebook --port=8888 --no-browser --ip=0.0.0.0 --allow-root"]
+  volumes:
+    - hostPath:
+        path: /Users/hossein.akhlaghpour/workspace
+        type: Directory
+      name: workspace
