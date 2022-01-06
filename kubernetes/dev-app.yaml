@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: dev-app
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: dev-app
@@ -25,8 +25,11 @@ spec:
           volumeMounts:
           - mountPath: "/home/developer/workspace"
             name: workspace
-          command: ["sh", "-c", "tail -f /dev/null"]
-          # command: ["sh", "-c", "jupyter notebook --port=8888 --no-browser --ip=0.0.0.0 --allow-root"]
+          - mountPath: "/home/developer/.jupyter"
+            name: workspace
+            subPath: .jupyter
+          # command: ["sh", "-c", "tail -f /dev/null"]
+          command: ["sh", "-c", "jupyter notebook --port=8888 --no-browser --ip=0.0.0.0 --allow-root"]
       restartPolicy: Always
       volumes:
       - hostPath:
