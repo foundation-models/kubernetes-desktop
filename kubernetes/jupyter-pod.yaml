@@ -1,11 +1,11 @@
 kind: Pod
 apiVersion: v1
 metadata:
-  name: jupyter-python3
+  name: jupyter-pod
 spec:
   containers:
-  - name: jupyter-python3
-    image: hossein20s/jupyter-python3:v1.0
+  - name: jupyter-pod
+    image: hossein20s/jupyter:v1.0
     ports:
     - containerPort: 8888
     workingDir: /home/developer/workspace

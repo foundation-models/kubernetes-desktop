@@ -8,7 +8,7 @@ spec:
       port: 8888
       targetPort: 8888
   selector:
-    app: dev-app
+    app: jupyter-deployment
   type: LoadBalancer
 status:
   loadBalancer: {}

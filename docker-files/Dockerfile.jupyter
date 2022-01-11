@@ -1,0 +1,16 @@
+# docker build -f Dockerfile.jupyter -t hossein20s/jupyter:numpy .
+# taken from https://github.com/veryacademy/YT_FastAPI_Celery_Redis_Flower_Introduction/blob/main/Dockerfile
+
+FROM hossein20s/python-based-service:v1.0
+
+ENV PYTHONUNBUFFERED=1
+
+RUN pip install jupyter ipywidgets ipykernel
+
+COPY requirements.txt requirements.txt
+RUN pip3 install --upgrade pip && pip3 install -r requirements.txt
+
+CMD ["jupyter", "notebook", "--port=9999", "--no-browser", "--ip=0.0.0.0", "--allow-root"]
+
+EXPOSE 8888
+

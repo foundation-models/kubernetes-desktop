@@ -1,0 +1,15 @@
+# docker build -f Dockerfile.python-based-service -t hossein20s/python-based-service:v1.0 .
+# taken from https://github.com/veryacademy/YT_FastAPI_Celery_Redis_Flower_Introduction/blob/main/Dockerfile
+
+FROM python:3.9.6-slim-buster
+
+ENV PYTHONUNBUFFERED=1
+WORKDIR /app
+COPY requirements-python-based-service.txt requirements.txt
+
+RUN pip3 install --upgrade pip
+RUN pip3 install -r requirements.txt
+
+COPY app/ /app
+
+EXPOSE 8000
